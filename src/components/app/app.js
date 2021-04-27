@@ -9,9 +9,9 @@ import './app.css'
 
 const App = () => {
     const todoData = [
-        {label: 'Drink coffee', important: false, id: 1},
-        {label: 'Make awesome app', important: true, id: 2},
-        {label: 'Have a lunch', important: false, id: 3},
+        {label: 'Drink coffee', id: 1},
+        {label: 'Make awesome app', id: 2},
+        {label: 'Have a lunch', id: 3},
     ];
 
     return (
