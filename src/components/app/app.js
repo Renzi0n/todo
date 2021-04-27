@@ -4,6 +4,7 @@ import AppHeader from '../app-header/app-header';
 import SearchPanel from '../search-panel/search-panel';
 import TodoList from '../todo-list/todo-list';
 import ItemStatusFilter from '../item-status-filter/item-status-filter';
+import AddItemPanel from '../add-item-panel/add-item-panel';
 
 import './app.css'
 
@@ -31,8 +32,25 @@ export default class App extends Component {
         });
     };
 
+    addItem = (label) => {
+
+        this.setState(({todoData}) => {
+
+            return {
+                todoData: [
+                    ...todoData, 
+                    {
+                        label, 
+                        id: ++todoData.length
+                    }
+                ]
+            };
+        });
+    };
+
     render () {
         const {todoData} = this.state;
+
         return (
             <div className="app">
                 <AppHeader toDo={1} done={3} />
@@ -41,6 +59,8 @@ export default class App extends Component {
                     <SearchPanel />
                     <ItemStatusFilter />
                 </div>
+
+                <AddItemPanel onAddItem={this.addItem}/>
 
                 <TodoList 
                     todos={todoData} 
