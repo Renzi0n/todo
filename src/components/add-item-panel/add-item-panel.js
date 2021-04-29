@@ -4,24 +4,39 @@ import './add-item-panel.css';
 
 export default class AddItemPanel extends Component {
 
+    state = {
+        label: ''
+    };
 
-    onAddItem = () => {
-        const input = document.querySelector('.name-input').value;
+    onLabelChange = (e) => {
+        this.setState({
+            label: e.target.value
+        });
+    };
 
-        if (input !== '') {
-            this.props.onAddItem(input);
-        }
+    onAddItem = (e) => {
+        e.preventDefault();
+        this.props.onAddItem(this.state.label);
+        this.setState({
+            label:''
+        });
     };
     
     render () {
+        const isDisabled = this.state.label === '' ? true : false;
 
         return (
-            <form className="add-item-panel">
-                <input className="form-control name-input" placeholder="Item name" />
+            <form className="add-item-panel"
+                  onSubmit={this.onAddItem} >
+                <input 
+                    type="text" className="form-control name-input" 
+                    placeholder="What needs to be done?" 
+                    onChange={this.onLabelChange} 
+                    value={this.state.label} />
 
                 <button 
-                    className="btn btn-primary" type="reset"
-                    onClick={this.onAddItem}>
+                    className="btn btn-primary"
+                    disabled={isDisabled}>
                     Add item
                 </button>
             </form>

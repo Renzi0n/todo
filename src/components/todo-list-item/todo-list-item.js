@@ -3,11 +3,6 @@ import './todo-list-item.css';
 
 export default class TodoListItem extends Component {
 
-    state = {
-        done: false,
-        important: false
-    };
-    
     render () {
         const { label, onDeleted, onDone, onImportant, done, important } = this.props;
 

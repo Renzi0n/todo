@@ -58,22 +58,26 @@ export default class App extends Component {
         });
     };
 
+    setProperty(arr, id, property) {
+        const ind = this.findIndexInArr(arr, id);
+        const newObj = {
+            ...arr[ind],
+            [property]: !arr[ind][property]
+        };
+
+        return [
+                ...arr.slice(0, ind), 
+                newObj,
+                ...arr.slice(ind+1),
+        ];
+};
+
     setDone = (id) => {
         
         this.setState(({todoData}) => {
 
-            const ind = this.findIndexInArr(todoData, id);
-            const newObj = {
-                ...todoData[ind],
-                done: !todoData[ind].done
-            };
-
             return {
-                todoData: [
-                    ...todoData.slice(0, ind), 
-                    newObj,
-                    ...todoData.slice(ind+1),
-                ]
+                todoData: this.setProperty(todoData, id, 'done')
             };
         });
     };
@@ -82,19 +86,9 @@ export default class App extends Component {
         
         this.setState(({todoData}) => {
 
-            const ind = this.findIndexInArr(todoData, id);
-            const newObj = {
-                ...todoData[ind],
-                important: !todoData[ind].important
-            };
-
             return {
-                todoData: [
-                    ...todoData.slice(0, ind), 
-                    newObj,
-                    ...todoData.slice(ind+1)
-                ]
-            }
+                todoData: this.setProperty(todoData, id, 'important')
+            };
         });
     };
 
@@ -113,13 +107,13 @@ export default class App extends Component {
                     <ItemStatusFilter />
                 </div>
 
-                <AddItemPanel onAddItem={this.addItem}/>
-
                 <TodoList 
                     todos={todoData} 
                     onDeleted={this.deleteItem}
                     onDone={this.setDone}
                     onImportant={this.setImportant}/>
+
+                <AddItemPanel onAddItem={this.addItem}/>
             </div>
         );
     };
