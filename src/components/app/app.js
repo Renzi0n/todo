@@ -19,44 +19,6 @@ export default class App extends Component {
         type: 0
     };
 
-    getLeveshteinDistance (s1, s2, costs = {}) {
-        var i, j, l1, l2, flip, ch, chl, ii, ii2, cost, cutHalf;
-        l1 = s1.length;
-        l2 = s2.length;
-        
-        var cr = costs.replace || 1;
-        var cri = costs.replaceCase || costs.replace || 1;
-        var ci = costs.insert || 1;
-        var cd = costs.remove || 1;
-    
-        cutHalf = flip = Math.max(l1, l2);
-    
-        var minCost = Math.min(cd, ci, cr);
-        var minD = Math.max(minCost, (l1 - l2) * cd);
-        var minI = Math.max(minCost, (l2 - l1) * ci);
-        var buf = new Array((cutHalf * 2) - 1);
-    
-        for (i = 0; i <= l2; ++i) {
-            buf[i] = i * minD;
-        }
-    
-        for (i = 0; i < l1; ++i, flip = cutHalf - flip) {
-            ch = s1[i];
-            chl = ch.toLowerCase();
-    
-            buf[flip] = (i + 1) * minI;
-    
-            ii = flip;
-            ii2 = cutHalf - flip;
-    
-            for (j = 0; j < l2; ++j, ++ii, ++ii2) {
-                cost = (ch === s2[j] ? 0 : (chl === s2[j].toLowerCase()) ? cri : cr);
-                buf[ii + 1] = Math.min(buf[ii2 + 1] + cd, buf[ii] + ci, buf[ii2] + cost);
-            }
-        }
-        return buf[l2 + cutHalf - flip];
-    };
-
     createTodoItem (label, length) {
         return { 
             label, 
@@ -152,12 +114,30 @@ export default class App extends Component {
 
     filterArr = (arr, type) => {
         if (type === 1) {
-            return arr.filter((it) => it.done === false);
+            return arr.filter((it) => !it.done);
         } else if (type === 2) {
-            return arr.filter((it) => it.done === true);
+            return arr.filter((it) => it.done);
         };
 
         return arr;
+    };
+
+    onFormChange = (id, e) => {
+        this.setState(({todoData}) => {
+            const ind = this.findIndexInArr(todoData, id);
+            const newObj = {
+                ...todoData[ind],
+                label: e.target.value
+            };
+
+            return {
+                todoData: [
+                    ...todoData.slice(0, ind), 
+                    newObj,
+                    ...todoData.slice(ind+1),
+                ]
+            }
+        });
     };
 
     render () {
@@ -185,7 +165,8 @@ export default class App extends Component {
                     todos={visibleItems} 
                     onDeleted={this.deleteItem}
                     onDone={this.setDone}
-                    onImportant={this.setImportant}/>
+                    onImportant={this.setImportant}
+                    onFormChange={this.onFormChange} />
 
                 <AddItemPanel onAddItem={this.addItem}/>
             </div>
