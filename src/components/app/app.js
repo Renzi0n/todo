@@ -15,7 +15,8 @@ export default class App extends Component {
             this.createTodoItem('Make awesome app', 1),
             this.createTodoItem('Have a lunch', 2),
         ],
-        term: ''
+        term: '',
+        type: 0
     };
 
     getLeveshteinDistance (s1, s2, costs = {}) {
@@ -145,10 +146,25 @@ export default class App extends Component {
         })
     };
 
-    render () {
-        const {todoData, term} = this.state;
+    onSetFilter = (type) => {
+        this.setState({type});
+    };
 
-        const visibleItems = this.search(todoData, term);
+    filterArr = (arr, type) => {
+        if (type === 1) {
+            return arr.filter((it) => it.done === false);
+        } else if (type === 2) {
+            return arr.filter((it) => it.done === true);
+        };
+
+        return arr;
+    };
+
+    render () {
+        const {todoData, term, type} = this.state;
+
+        let visibleItems = this.search(todoData, term);
+        visibleItems = this.filterArr(visibleItems, type);
 
         const countDone = todoData.filter((it) => it.done).length;
         const countTodo = todoData.length - countDone;
@@ -161,7 +177,8 @@ export default class App extends Component {
                     <SearchPanel 
                         onSearch={this.onChangeSearch} 
                         value={term} />
-                    <ItemStatusFilter />
+                    <ItemStatusFilter 
+                        onSetFilter={this.onSetFilter}/>
                 </div>
 
                 <TodoList 

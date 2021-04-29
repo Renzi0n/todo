@@ -15,7 +15,7 @@ export default class SearchPanel extends Component {
         this.props.onSearch(term);
     };
 
-    onReset = (e) => {
+    onReset = () => {
         this.setState({
             term: ''
         });
