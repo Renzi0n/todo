@@ -4,10 +4,15 @@ import './add-item-panel.css';
 
 export default class AddItemPanel extends Component {
 
-    onAddItemBtnClick = () => {
-        this.props.onAddItem(document.querySelector('.name-input').value);
-    };
 
+    onAddItem = () => {
+        const input = document.querySelector('.name-input').value;
+
+        if (input !== '') {
+            this.props.onAddItem(input);
+        }
+    };
+    
     render () {
 
         return (
@@ -16,7 +21,7 @@ export default class AddItemPanel extends Component {
 
                 <button 
                     className="btn btn-primary" type="reset"
-                    onClick={this.onAddItemBtnClick}>
+                    onClick={this.onAddItem}>
                     Add item
                 </button>
             </form>
